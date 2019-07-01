@@ -1,0 +1,24 @@
+{
+  "name": "ajax-http-server",
+  "description": "",
+  "version": "0.0.1",
+  "main": "server.js",
+  "directories": {},
+  "scripts": {
+    "dev": "node ./server.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  },
+  "author": "alan",
+  "keywords": [
+    "ajax",
+    "http",
+    "jsonp",
+    "express",
+    "http-server"
+  ],
+  "license": "ISC"
+}

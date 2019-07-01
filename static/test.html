@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>http request test</title>
+</head>
+<body>
+    <h1>http request test</h1>
+    <button id="get">发送get请求</button>
+    <br/><br/>
+    <button id="post">发送post请求</button>
+    <br/><br/>
+    <button id="jsonp">发送jsonp请求</button>
+    <br/><br/>
+    <button id="cors">发送cors请求</button>
+    <br/><br/>
+    <span>响应数据：</span><sapn id="show"></sapn>
+</body>
+<script src="./HttpCallback.js"></script>
+<script src="./HttpPromise.js"></script>
+<script src="./Http.js"></script>
+<script name="httpCalback">
+    var http = new HttpCallback();
+    //var http = new Http();
+    var host = 'http://localhost:8081';
+    function getDom(id){
+        return document.getElementById(id);
+    }
+    function log(data){
+        try{
+            console.log(JSON.parse(data));
+        }catch(err){
+            console.log(data);
+        }
+        getDom('show').innerText = data;
+    }
+    getDom('get').onclick = function(){
+        http.get(host+'/get', {name: 'get'}, res=>log(res));
+    }
+    getDom('post').onclick = async function(){
+        http.post(host+'/post', {name: 'post'}, res=>log(res));
+    }
+    getDom('jsonp').onclick = async function(){
+        http.jsonp(host+'/jsonp', {name: 'jsonp'}, res=>log(res));
+    }
+    getDom('cors').onclick = async function(){
+        http.get(host+'/cors', {name: 'cors'}, res=>log(res));
+    }
+</script>
+<!-- <script name="http">
+    //var http = new HttpPromise();
+    var http = new Http();
+    var host = 'http://localhost:8081';
+    function getDom(id){
+        return document.getElementById(id);
+    }
+    function log(data){
+        try{
+            console.log(JSON.parse(data));
+        }catch(err){
+            console.log(data);
+        }
+        getDom('show').innerText = data;
+    }
+    getDom('get').onclick = async function(){
+        const res = await http.get(host+'/get', {name: 'get'});
+        log(res);
+    }
+    getDom('post').onclick = async function(){
+        const res = await http.post(host+'/post', {name: 'post'});
+        log(res);
+    }
+    getDom('jsonp').onclick = async function(){
+        const res = await http.jsonp(host+'/get', {name: 'jsonp'});
+        log(res);
+    }
+    getDom('cors').onclick = async function(){
+        const res = await http.get(host+'/cors', {name: 'cors'});
+        log(res);
+    }
+</script> -->
+
+</html>

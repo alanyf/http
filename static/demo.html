@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>http request test</title>
+</head>
+<body>
+    <h1>http request test</h1>
+    <select id="select">
+        <option value="async">async写法</option>
+        <option value="promise">promise写法</option>
+        <option value="callback">callback写法</option>
+    </select>
+    <br/><br/>
+    <button id="get">发送get请求</button>
+    <br/><br/>
+    <button id="post">发送post请求</button>
+    <br/><br/>
+    <button id="jsonp">发送jsonp请求</button>
+    <br/><br/>
+    <button id="cors">发送cors请求</button>
+    <br/><br/>
+    <span>响应数据：</span><sapn id="show"></sapn>
+    <br/><br/>
+    <span>写法：</span><sapn id="style"></sapn>
+</body>
+<script src="./Http.js"></script>
+<script name="http">
+    var http = new Http();
+    var host = 'http://localhost:8081';
+    var style = 'async'; //'async' || 'promise' || 'callback';
+    console.log('style:', style);
+    getDom('select').onchange = function(){
+        var value = this.options[this.selectedIndex].value;
+        style = value;
+        console.log('style:', style);
+    }
+    getDom('get').onclick = async function(){
+        switch(style){
+            case 'callback': 
+                http.get(host+'/get', {name: 'get'}, res=>log(res));
+                break;
+            case 'promise': 
+                http.get(host+'/get', {name: 'get'}).then(res=>log(res));
+                break;
+            case 'async': 
+                var res = await http.get(host+'/get', {name: 'get'});
+                log(res);
+                break;
+            default: 
+                http.get(host+'/get', {name: 'get'}, res=>log(res));
+            break;
+        }
+    }
+    getDom('post').onclick = async function(){
+        switch(style){
+            case 'callback': 
+                http.post(host+'/post', {name: 'post'}, res=>log(res));
+                break;
+            case 'promise': 
+                http.post(host+'/post', {name: 'post'}).then(res=>log(res));
+                break;
+            case 'async': 
+                var res = await http.post(host+'/post', {name: 'post'});
+                log(res);
+                break;
+            default: 
+                http.post(host+'/post', {name: 'post'}, res=>log(res));
+            break;
+        }
+    }
+    getDom('jsonp').onclick = async function(){
+        switch(style){
+            case 'callback': 
+                http.jsonp(host+'/jsonp', {name: 'jsonp'}, res=>log(res));
+                break;
+            case 'promise': 
+                http.jsonp(host+'/jsonp', {name: 'jsonp'}).then(res=>log(res));
+                break;
+            case 'async': 
+                var res = await http.jsonp(host+'/jsonp', {name: 'jsonp'});
+                log(res);
+                break;
+            default: 
+                http.jsonp(host+'/jsonp', {name: 'jsonp'}, res=>log(res));
+            break;
+        }
+    }
+    getDom('cors').onclick = async function(){
+        switch(style){
+            case 'callback': 
+                http.get(host+'/cors', {name: 'cors'}, res=>log(res));
+                break;
+            case 'promise': 
+                http.get(host+'/cors', {name: 'cors'}).then(res=>log(res));
+                break;
+            case 'async': 
+                var res = await http.get(host+'/cors', {name: 'cors'});
+                log(res);
+                break;
+            default: 
+                http.get(host+'/cors', {name: 'cors'}, res=>log(res));
+            break;
+        }
+    }
+       
+    function getDom(id){
+        return document.getElementById(id);
+    }
+    function log(data){
+        try{
+            console.log(JSON.parse(data));
+        }catch(err){
+            console.log(data);
+        }
+        getDom('show').innerText = data;
+        getDom('style').innerText = style;
+    }
+</script>
+
+</html>

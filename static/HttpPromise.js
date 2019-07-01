@@ -15,12 +15,12 @@ function HttpPromise(){
             xhr.send(null);
             function handler(){
                 if(this.readyState == 4){
-                    if(this.status ==200 ){
-                        var obj = JSON.parse(xhr.responseText);
-                        return resolve(obj);
-                    }
-                    else{
-                        return reject(new Error("error"));
+                    if(this.status == 200 ){
+                        var str = xhr.responseText;
+                        return resolve(str);
+                    }else{
+                        const error = new Error(getError(xhr, 'get'));
+                        return reject(error);
                     }
                 }
             }
@@ -31,16 +31,18 @@ function HttpPromise(){
         var promise = new Promise(function(resolve,reject){
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = handler;
+            xhr.withCredentials = true;// 带上cookie
             xhr.open("post",url, true);
-            xhr.send(param);
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xhr.send(getParamStr(param));
             function handler(){
                 if(this.readyState == 4){
-                    if(this.status ==200 ){
-                        var obj = JSON.parse(xhr.responseText);
-                        return resolve(obj);
-                    }
-                    else{
-                        return reject(new Error("error"));
+                    if(this.status == 200 ){
+                        var str = xhr.responseText;
+                        return resolve(str);
+                    }else{
+                        const error = new Error(getError(xhr, 'post'));
+                        return reject(error);
                     }
                 }
             }
@@ -59,32 +61,6 @@ function HttpPromise(){
         });
     }
 
-    HttpPromise.prototype.cors = function(url, param){            
-        function creatCorsRequest(method,url){
-            var xhr = new XMLHttpRequest();
-            if("withCredentials" in xhr){
-                xhr.open(method,url,true);
-            }else if(typeof XDomainRequest != "undefined"){
-                xhr.open(method,url)
-            }else{
-                xhr = null
-            }
-            return xhr;
-        }
-        var promise = new Promise(function(resolve,reject){
-            var xhr = creatCorsRequest('GET',url+getParamStr(param));
-            xhr.onload = function(){
-                var text = xhr.responseText;
-                return resolve(text);
-            };
-            xhr.onerror = function(){
-                console.log('cors fail')
-                return reject(new Error("error"));
-            };
-            xhr.send();
-        });
-        return promise;
-    } 
 }
 
-var http = new HttpPromise();
+// var http = new HttpPromise();
